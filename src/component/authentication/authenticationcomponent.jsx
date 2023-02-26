@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { getRedirectResult } from "firebase/auth";
 import {
   auth,
@@ -8,6 +8,7 @@ import {
 import SignUpForm from '../sign-up-form/sign-up-form.component';
 import SignInForm from '../sign-in-form/sign-in-form.component';
 import './authentication.styles.scss';
+import { UserContext } from "../../context/user.context";
 
 const Authentication = () => {
   useEffect(() => {
@@ -23,10 +24,22 @@ const Authentication = () => {
     createUserDocumentFromAuth(user);
   }
 
+  const val = useContext(UserContext);
   return (
     <div className="authentication-container">
-      <SignInForm />
-      <SignUpForm />
+      {
+        !val.currentUser &&
+        (<>
+          <SignInForm />
+          <SignUpForm />
+        </>)
+      }
+      {
+        val.currentUser &&
+        (<>
+          <h1>You have already logined</h1>
+        </>)
+      }
     </div>
   );
 };
